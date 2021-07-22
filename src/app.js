@@ -1,8 +1,6 @@
 require('./db/connection');
-const { listenerCount } = require('events');
-// const { defaultMaxListeners } = require('events');
 const yargs = require('yargs');
-const { addUser, addFilm, addWatch, listUser, listFilms, updateRating, delInfo, delWatched} = require('./utils');
+const { addUser, addFilm, addWatch, listUser, listFilms, updateRating, updateUser, delInfo, delWatched} = require('./utils');
 const command = process.argv[2];
 const username = yargs.argv.user;
 const password = yargs.argv.pass;
@@ -11,6 +9,9 @@ const year = yargs.argv.year;
 const description = yargs.argv.desc;
 const category = yargs.argv.cat;
 const rating = yargs.argv.rating;
+const newUsername = yargs.argv.newuser;
+const newPassword = yargs.argv.newpass;
+
 
 const app = () => {
     if (command === 'add user') {
@@ -25,6 +26,8 @@ const app = () => {
         listFilms()
     } else if (command === 'update rating') {
         updateRating(username, password, title, rating)
+    }else if (command === 'update user') {
+        updateUser(username, password, newPassword, newUsername)
     } else if ( command === 'delete user') {
         delInfo(username, password)
     } else if (command === 'delete watched') {

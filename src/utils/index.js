@@ -1,22 +1,22 @@
 const sql = require('../db/connection');
+const {closeConnection} = require('../db/connection');
 
-exports.addUser = (username, password) => {
+exports.addUser = async (username, password) => {
     try {
         const user = {
             username: username,
             pass: password
         }
-        // insert into users set username = '', pass = ''
-        sql.query("INSERT INTO users SET ?", user) 
+        await sql.query("INSERT INTO users SET ?", user) 
     } catch (error) {
         console.log(error)
     }
+    closeConnection();
 };
 
 exports.addFilm = (title, year, description, category) => {
     try {
         const film = [title, year, description, category]
-        // insert into users set username = '', pass = ''
         sql.query("INSERT INTO films SET title = ?, year = ?, description = ?, category = (SELECT catID FROM categories WHERE category= ?)", film) 
     } catch (error) {
         console.log(error)
@@ -72,6 +72,21 @@ exports.updateRating = (username, password, title, rating) => {
     }
 };
 
+exports.updateUser= (username, password, newpass) => {
+    try {
+        const user = [newpass, username, password]
+        sql.query("UPDATE users SET password = ? AS pass, username = ? AS user WHERE username = ? AND password = ?", user, (err, results, fields) => {
+            if (results !== undefined) {
+                console.log('Password successfully updated')
+            } else {
+                console.log('Please insert the correct username and password combination')
+            }
+        });
+        
+    } catch (error) {
+        console.log(error)
+    }
+};
 
 exports.delInfo = (username, password) => {
     try {
